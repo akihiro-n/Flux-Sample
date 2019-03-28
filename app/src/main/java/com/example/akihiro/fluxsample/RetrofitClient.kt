@@ -7,6 +7,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitClient {
+
     private val baseURL: String by lazy {
         MyApplication.getApplication.getString(R.string.base_url)
     }

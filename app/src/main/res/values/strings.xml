@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Flux Sample</string>
-    <string name="base_url"></string>
+    <string name="base_url">https://qiita.com</string>
 </resources>

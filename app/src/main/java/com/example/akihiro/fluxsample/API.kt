@@ -6,10 +6,10 @@ import retrofit2.http.Query
 
 interface API {
 
-    @GET("")
+    @GET("/api/v2/items")
     fun getItems(
         @Query("page") page: Int,
         @Query("per_page") perPage: Int,
-        @Query("query") query: String
+        @Query("query") query: String?
     ): Single<List<Item>>
 }
