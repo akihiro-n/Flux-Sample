@@ -1,6 +1,12 @@
 package com.example.akihiro.fluxsample
 
 import android.app.Application
+import com.example.akihiro.fluxsample.domain.dispatcher.Dispatcher
+import com.example.akihiro.fluxsample.domain.repository.ItemRepository
+import com.example.akihiro.fluxsample.domain.repository.ItemRepositoryImpl
+import com.example.akihiro.fluxsample.domain.usecase.ItemUseCase
+import com.example.akihiro.fluxsample.domain.usecase.ItemUseCaseImpl
+import com.example.akihiro.fluxsample.infra.RetrofitClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -23,7 +29,7 @@ class MyApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(this@MyApplication)
-            modules(clientModule, repositoryModule, useCaseModule)
+            modules(clientModule, repositoryModule, useCaseModule, actionCreatorModule, dispatcherModule)
         }
     }
 
@@ -42,6 +48,18 @@ class MyApplication : Application() {
     private val useCaseModule: Module by lazy {
         module {
             single<ItemUseCase> { ItemUseCaseImpl(get()) }
+        }
+    }
+
+    private val actionCreatorModule: Module by lazy {
+        module {
+            single { ItemActionCreator(get(), get())}
+        }
+    }
+
+    private val dispatcherModule: Module by lazy {
+        module {
+            single { Dispatcher() }
         }
     }
 }

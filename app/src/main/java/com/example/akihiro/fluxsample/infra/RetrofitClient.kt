@@ -1,5 +1,7 @@
-package com.example.akihiro.fluxsample
+package com.example.akihiro.fluxsample.infra
 
+import com.example.akihiro.fluxsample.MyApplication
+import com.example.akihiro.fluxsample.R
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

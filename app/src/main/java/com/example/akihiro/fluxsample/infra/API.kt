@@ -1,5 +1,6 @@
-package com.example.akihiro.fluxsample
+package com.example.akihiro.fluxsample.infra
 
+import com.example.akihiro.fluxsample.domain.entity.Item
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query

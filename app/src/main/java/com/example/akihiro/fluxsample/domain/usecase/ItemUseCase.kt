@@ -1,5 +1,6 @@
-package com.example.akihiro.fluxsample
+package com.example.akihiro.fluxsample.domain.usecase
 
+import com.example.akihiro.fluxsample.domain.entity.Item
 import io.reactivex.Single
 
 interface ItemUseCase {

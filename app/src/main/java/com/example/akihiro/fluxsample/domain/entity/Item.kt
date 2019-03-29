@@ -1,4 +1,4 @@
-package com.example.akihiro.fluxsample
+package com.example.akihiro.fluxsample.domain.entity
 
 data class Item (
     val title: String,
