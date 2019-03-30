@@ -3,9 +3,9 @@ package com.example.akihiro.fluxsample.domain.usecase
 import com.example.akihiro.fluxsample.domain.entity.Item
 import com.example.akihiro.fluxsample.domain.repository.ItemRepository
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 
-class ItemUseCaseImpl(private val repository: ItemRepository) :
-    ItemUseCase {
+class ItemUseCaseImpl(private val repository: ItemRepository) : ItemUseCase {
 
     companion object {
         private const val PER_PAGE = 20
@@ -17,8 +17,9 @@ class ItemUseCaseImpl(private val repository: ItemRepository) :
      * @return
      */
     override fun fetchNewItems(page: Int): Single<List<Item>> {
-        return repository.getItems(page,
-            PER_PAGE, null)
+        return repository
+            .getItems(page, PER_PAGE, null)
+            .subscribeOn(Schedulers.io())
     }
 
     /**
@@ -28,7 +29,8 @@ class ItemUseCaseImpl(private val repository: ItemRepository) :
      * @return
      */
     override fun fetchItemsForQuery(page: Int, query: String): Single<List<Item>> {
-        return repository.getItems(page,
-            PER_PAGE, query)
+        return repository
+            .getItems(page, PER_PAGE, query)
+            .subscribeOn(Schedulers.io())
     }
 }

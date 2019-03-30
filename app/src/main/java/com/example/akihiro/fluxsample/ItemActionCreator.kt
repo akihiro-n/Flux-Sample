@@ -2,46 +2,26 @@ package com.example.akihiro.fluxsample
 
 import com.example.akihiro.fluxsample.domain.dispatcher.Dispatcher
 import com.example.akihiro.fluxsample.domain.usecase.ItemUseCase
-import io.reactivex.schedulers.Schedulers
 
 class ItemActionCreator(
     private val useCase: ItemUseCase,
-    private val dispatcher: Dispatcher
-)
+    dispatcher: Dispatcher): ActionCreator(dispatcher)
 {
 
-    /**
-     * 最新の記事一覧を取得
-     * @param page
-     */
     fun fetchNewItems(page: Int) {
         useCase
             .fetchNewItems(page)
-            .subscribeOn(Schedulers.io())
-            .doOnSubscribe {  }
-            .doFinally {  }
-            .subscribe({
-                dispatcher.dispatch(Action.ItemAction.FetchNewItems(it))
-            },{
-
-            })
+            .dispatch(Action.ItemAction::FetchNewItems)
+            .onErrorDispatch(Action.ItemAction::ErrorFetchNewItems)
+            .subscribe()
     }
 
-    /**
-     * Queryから検索した記事一覧を取得
-     * @param page
-     * @param query
-     */
     fun fetchItemsForQuery(page: Int, query: String) {
         useCase
             .fetchItemsForQuery(page, query)
-            .subscribeOn(Schedulers.io())
-            .doOnSubscribe {  }
-            .doFinally {  }
-            .subscribe({
-
-            },{
-
-            })
+            .dispatch(Action.ItemAction::FetchItemsForQuery)
+            .onErrorDispatch(Action.ItemAction::ErrorFetchItemsForQuery)
+            .subscribe()
     }
+
 }
