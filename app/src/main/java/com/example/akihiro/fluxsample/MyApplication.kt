@@ -5,9 +5,11 @@ import com.example.akihiro.fluxsample.application.actioncreator.ItemActionCreato
 import flux.Dispatcher
 import com.example.akihiro.fluxsample.domain.repository.ItemRepository
 import com.example.akihiro.fluxsample.domain.repository.ItemRepositoryImpl
+import com.example.akihiro.fluxsample.domain.store.ItemStore
 import com.example.akihiro.fluxsample.domain.usecase.ItemUseCase
 import com.example.akihiro.fluxsample.domain.usecase.ItemUseCaseImpl
 import com.example.akihiro.fluxsample.infra.RetrofitClient
+import com.example.akihiro.fluxsample.ui.MainViewModel
 import flux.Action
 import io.reactivex.subjects.PublishSubject
 import org.koin.android.ext.koin.androidContext
@@ -37,7 +39,9 @@ class MyApplication : Application() {
                 repositoryModule,
                 useCaseModule,
                 actionCreatorModule,
-                dispatcherModule
+                dispatcherModule,
+                storeModule,
+                viewModelModule
             )
         }
     }
@@ -69,6 +73,18 @@ class MyApplication : Application() {
     private val dispatcherModule: Module by lazy {
         module {
             single<Dispatcher> { PublishSubject.create<Action>() }
+        }
+    }
+
+    private val storeModule: Module by lazy {
+        module {
+            single { ItemStore() }
+        }
+    }
+
+    private val viewModelModule: Module by lazy {
+        module {
+            single { MainViewModel(get(), get()) }
         }
     }
 }
