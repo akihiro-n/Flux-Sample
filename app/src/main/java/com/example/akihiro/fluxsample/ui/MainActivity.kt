@@ -1,8 +1,9 @@
-package com.example.akihiro.fluxsample
+package com.example.akihiro.fluxsample.ui
 
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.akihiro.fluxsample.R
 import com.example.akihiro.fluxsample.databinding.ActivityMainBinding
 import com.example.akihiro.fluxsample.domain.usecase.ItemUseCase
 import io.reactivex.schedulers.Schedulers
