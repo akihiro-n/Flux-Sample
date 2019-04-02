@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.util.Log
 import com.example.akihiro.fluxsample.application.actioncreator.ItemActionCreator
 import com.example.akihiro.fluxsample.domain.entity.Item
 import com.example.akihiro.fluxsample.domain.store.ItemStore
@@ -24,10 +25,8 @@ class MainViewModel(
         ItemsAdapter(this@MainViewModel)
     }
 
-    /**
-     * ActivityのonCreate時に呼ばれる
-     */
     fun onCreate() {
+        itemActionCreator.initialize()
         initStores()
         initActions()
     }
@@ -35,11 +34,13 @@ class MainViewModel(
     @SuppressLint("CheckResult")
     private fun initStores() {
         itemStore
-            .itemsState
-            .subscribe {
+            .itemsState()
+            .subscribe ({
                 itemsMutableLiveData.postValue(it)
                 adapter.notifyDataSetChanged()
-            }
+            }, {
+
+            })
     }
 
     private fun initActions() {

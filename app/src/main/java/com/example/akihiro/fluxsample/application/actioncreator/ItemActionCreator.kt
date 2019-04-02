@@ -8,10 +8,14 @@ class ItemActionCreator(
     private val useCase: ItemUseCase): ActionCreator()
 {
 
+    fun initialize() {
+        dispatch(ItemAction.Initialize)
+    }
+
     fun fetchNewItems(page: Int) {
         useCase
             .fetchNewItems(page)
-            .dispatch(ItemAction::FetchNewItems)
+            .onSuccessDispatch(ItemAction::FetchNewItems)
             .onErrorDispatch(ItemAction::ErrorFetchNewItems)
             .subscribe()
     }
@@ -19,7 +23,7 @@ class ItemActionCreator(
     fun fetchItemsForQuery(page: Int, query: String) {
         useCase
             .fetchItemsForQuery(page, query)
-            .dispatch(ItemAction::FetchItemsForQuery)
+            .onSuccessDispatch(ItemAction::FetchItemsForQuery)
             .onErrorDispatch(ItemAction::ErrorFetchItemsForQuery)
             .subscribe()
     }

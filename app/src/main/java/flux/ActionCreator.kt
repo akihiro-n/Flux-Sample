@@ -8,13 +8,17 @@ abstract class ActionCreator : KoinComponent {
 
     private val dispatcher by inject<Dispatcher>()
 
-    protected fun <T, A : Action> Single<T>.dispatch(mapper: (T) -> A): Single<A> {
-        return this@dispatch
+    protected fun dispatch(action: Action) {
+        dispatcher.onNext(action)
+    }
+
+    protected fun <T, A : Action> Single<T>.onSuccessDispatch(mapper: (T) -> A): Single<A> {
+        return this@onSuccessDispatch
             .map { type ->
                 mapper(type)
             }
             .doOnSuccess { action ->
-                dispatcher.onNext(action)
+                dispatch(action)
             }
     }
 
@@ -22,7 +26,7 @@ abstract class ActionCreator : KoinComponent {
         return this@onErrorDispatch
             .doOnError { throwable ->
                 val action = onErrorAction(throwable)
-                dispatcher.onNext(action)
+                dispatch(action)
             }
     }
 }

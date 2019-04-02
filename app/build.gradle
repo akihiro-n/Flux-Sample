@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -22,6 +24,12 @@ android {
     }
     dataBinding {
         enabled = true
+    }
+}
+
+kotlin {
+    experimental {
+        coroutines 'enable'
     }
 }
 
@@ -63,4 +71,11 @@ dependencies {
 
     //RxAndroid
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    //Kotlin Coroutine
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.0-eap13"
+}
+
+repositories {
+    jcenter()
 }

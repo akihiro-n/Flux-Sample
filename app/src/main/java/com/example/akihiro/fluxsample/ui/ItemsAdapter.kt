@@ -7,18 +7,18 @@ import android.view.ViewGroup
 import com.example.akihiro.fluxsample.databinding.CellItemListBinding
 import com.example.akihiro.fluxsample.R
 
-class ItemsAdapter(private val viewModel: MainViewModel): RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
+class ItemsAdapter(private val viewModel: MainViewModel) : RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder = ViewHolder(p0)
 
     override fun getItemCount(): Int {
-        val value = viewModel.items.value?: return 0
+        val value = viewModel.items.value ?: return 0
         return value.size
     }
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        viewModel.items.value?.let {
-            p0.binding.item =  it[p1]
+        viewModel.items.value?.let { item ->
+            p0.binding.item = item[p1]
         }
     }
 
@@ -30,5 +30,5 @@ class ItemsAdapter(private val viewModel: MainViewModel): RecyclerView.Adapter<I
             viewGroup,
             false
         )
-    ): RecyclerView.ViewHolder(binding.root)
+    ) : RecyclerView.ViewHolder(binding.root)
 }

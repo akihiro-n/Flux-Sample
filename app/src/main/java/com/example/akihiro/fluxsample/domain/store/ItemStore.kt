@@ -11,20 +11,12 @@ import io.reactivex.subjects.BehaviorSubject
 class ItemStore : Store() {
 
     private var nextPage = 1
+    private var itemsSubject = BehaviorSubject.create<List<Item>>()
+    private var fetchItemErrorSubject = BehaviorSubject.create<Throwable>()
 
-    private val itemsSubject = BehaviorSubject.create<List<Item>>()
-
-    private val fetchItemErrorSubject = BehaviorSubject.create<Throwable>()
-
-    val nextPageState: () -> Int = {
-        nextPage
-    }
-
-    val itemsState: Observable<List<Item>>
-        get() = itemsSubject
-
-    val errorFetchItemsState: Observable<Throwable>
-        get() = fetchItemErrorSubject
+    fun nextPageState(): Int = nextPage
+    fun itemsState(): Observable<List<Item>> = itemsSubject
+    fun errorFetchItemsState(): Observable<Throwable> = fetchItemErrorSubject
 
     init {
         initActionObservables()
@@ -33,13 +25,22 @@ class ItemStore : Store() {
     @SuppressLint("CheckResult")
     private fun initActionObservables() {
         observable
-            .addNextPageState()
+            .updateNextPageState()
+            .ofType(ItemAction.Initialize::class.java)
+            .subscribe {
+                nextPage = 1
+                itemsSubject = BehaviorSubject.create<List<Item>>()
+                fetchItemErrorSubject = BehaviorSubject.create<Throwable>()
+            }
+
+        observable
+            .updateNextPageState()
             .ofType(ItemAction.FetchNewItems::class.java)
             .map(ItemAction.FetchNewItems::item)
             .subscribe(itemsSubject::onNext)
 
         observable
-            .addNextPageState()
+            .updateNextPageState()
             .ofType(ItemAction.FetchItemsForQuery::class.java)
             .map(ItemAction.FetchItemsForQuery::item)
             .subscribe(itemsSubject::onNext)
@@ -55,9 +56,6 @@ class ItemStore : Store() {
             .subscribe(fetchItemErrorSubject::onNext)
     }
 
-    private fun Observable<Action>.addNextPageState(): Observable<Action> = this@addNextPageState
-        .doOnNext {
-            nextPage += 1
-        }
+    private fun Observable<Action>.updateNextPageState() = doOnNext { nextPage += 1 }
 
 }
