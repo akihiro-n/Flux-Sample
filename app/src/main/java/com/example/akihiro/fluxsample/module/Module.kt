@@ -70,7 +70,7 @@ val storeModule: Module by lazy {
     }
 }
 
- val viewModelModule: Module by lazy {
+val viewModelModule: Module by lazy {
     module {
         single { MainViewModel(get(), get()) }
     }
