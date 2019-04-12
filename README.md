@@ -1,3 +1,3 @@
 # Flux-Sample
 
-### 主にLiveData、RxJava2などのライブラリを使用し、Flux + MVVMのベストな実装を模索するリポジトリ
+主にLiveData、RxJavaなどのライブラリを使用し、簡単なアプリを実装してFlux + MVVMアーキテクチャのベストな実装を模索するリポジトリ。
