@@ -1,12 +1,15 @@
 package com.example.akihiro.fluxsample.ui
 
+import android.arch.lifecycle.Observer
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import com.example.akihiro.fluxsample.MyApplication
 import com.example.akihiro.fluxsample.R
 import com.example.akihiro.fluxsample.databinding.ActivityMainBinding
+import com.example.akihiro.fluxsample.utility.pageNationListener
 import com.example.akihiro.fluxsample.utility.textChangedAsync
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -24,23 +27,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel.onCreate()
+        initViewModel()
+        initItemsRecyclerView()
+        observeLiveData()
+    }
+
+    private fun initViewModel() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.recyclerView.let {
-            it.layoutManager = LinearLayoutManager(this)
-            it.adapter = viewModel.adapter
+    }
+
+    private fun initItemsRecyclerView() {
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(MyApplication.getApplication)
+            adapter = viewModel.adapter
+            pageNationListener(18, viewModel::fetchNewItems)
         }
+    }
 
-
-
-        launch(Dispatchers.Unconfined) {
-            binding.editText
-                .textChangedAsync(this)
-                .await()
-                .consumeEach { text ->
-                    Log.v("callback", text) //フォームから入力された値がコールバックで受け取れる
-                }
-        }
-
+    private fun observeLiveData() {
+        viewModel.items.observe(this, Observer {
+            viewModel.adapter.notifyDataSetChanged()
+        })
     }
 }

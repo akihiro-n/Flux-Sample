@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.ImageView
 import kotlinx.coroutines.*
+import kotlinx.coroutines.android.Main
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -16,7 +17,7 @@ import java.net.URL
 @BindingAdapter("app:imageUrl")
 fun ImageView.imageUrl(url: String?) {
     url?: return
-    GlobalScope.launch(Dispatchers.Unconfined) {
+    GlobalScope.launch(Dispatchers.Main) {
         setImageBitmap(fetchBitmapAsync(url).await())
     }
 }

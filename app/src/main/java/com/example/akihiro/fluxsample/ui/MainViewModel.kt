@@ -35,15 +35,14 @@ class MainViewModel(
     private fun initStores() {
         itemStore
             .itemsState()
-            .subscribe ({
-                itemsMutableLiveData.postValue(it)
-                adapter.notifyDataSetChanged()
-            }, {
-
-            })
+            .subscribe (itemsMutableLiveData::postValue)
     }
 
     private fun initActions() {
+        fetchNewItems()
+    }
+
+    fun fetchNewItems() {
         itemActionCreator.fetchNewItems(itemStore.nextPageState())
     }
 

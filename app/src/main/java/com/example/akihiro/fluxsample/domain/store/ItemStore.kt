@@ -1,6 +1,7 @@
 package com.example.akihiro.fluxsample.domain.store
 
 import android.annotation.SuppressLint
+import android.util.Log
 import com.example.akihiro.fluxsample.application.action.ItemAction
 import com.example.akihiro.fluxsample.domain.entity.Item
 import flux.Action
@@ -11,8 +12,8 @@ import io.reactivex.subjects.BehaviorSubject
 class ItemStore : Store() {
 
     private var nextPage = 1
-    private var itemsSubject = BehaviorSubject.create<List<Item>>()
-    private var fetchItemErrorSubject = BehaviorSubject.create<Throwable>()
+    private val itemsSubject = BehaviorSubject.create<List<Item>>()
+    private val fetchItemErrorSubject = BehaviorSubject.create<Throwable>()
 
     fun nextPageState(): Int = nextPage
     fun itemsState(): Observable<List<Item>> = itemsSubject
@@ -29,15 +30,20 @@ class ItemStore : Store() {
             .ofType(ItemAction.Initialize::class.java)
             .subscribe {
                 nextPage = 1
-                itemsSubject = BehaviorSubject.create<List<Item>>()
-                fetchItemErrorSubject = BehaviorSubject.create<Throwable>()
+                itemsSubject.onNext(listOf())
             }
 
         observable
             .updateNextPageState()
             .ofType(ItemAction.FetchNewItems::class.java)
             .map(ItemAction.FetchNewItems::item)
-            .subscribe(itemsSubject::onNext)
+            .subscribe { items ->
+                itemsSubject.apply {
+                    value.let { value ->
+                        if (value == null) onNext(items) else onNext(value.plus(items))
+                    }
+                }
+            }
 
         observable
             .updateNextPageState()

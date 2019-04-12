@@ -74,6 +74,7 @@ dependencies {
 
     //Kotlin Coroutine
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.0-eap13"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.30.0-eap13'
 }
 
 repositories {
