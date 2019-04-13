@@ -1,49 +1,25 @@
 package com.example.akihiro.fluxsample.utility
 
 import android.text.Editable
+import android.text.TextWatcher
 import android.widget.EditText
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.channels.sendBlocking
+import io.reactivex.Observable
 
 /**
- * EditTextのExtension
- * @param coroutineScope
+ * EditTextクラスの拡張
+ * 入力された文字列を流すObservableを返す
  * @return
- * ＜使用例＞
- * launch(Dispatchers.Unconfined) {
- *     binding.editText
- *         .textChangedAsync(this)
- *         .await()
- *         .consumeEach { text ->
- *             Log.v("callback", text) //フォームから入力された値がコールバックで受け取れる
- *         }
- * }
  */
-fun EditText.textChangedAsync(coroutineScope: CoroutineScope): Deferred<ReceiveChannel<String>> =
-    BroadcastChannel<String>(1)
-        .also { broadcastChannel ->
-            val textWatcher = TextWatcher(broadcastChannel)
-            this@textChangedAsync.addTextChangedListener(textWatcher)
-        }
-        .let { broadcastChannel ->
-            coroutineScope.async(Dispatchers.Unconfined) {
-                broadcastChannel.openSubscription()
+fun EditText.toObservable(): Observable<String> = Observable
+    .create { observableEmitter ->
+        addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(editable: Editable?) {
+                editable?.let {
+                    observableEmitter.onNext("$it")
+                }
             }
-        }
 
-/**
- * TextWatcherを継承したクラス
- * BroadcastChannel<String>を渡す
- * @param broadcastChannel
- */
-private class TextWatcher(private val broadcastChannel: BroadcastChannel<String>) : android.text.TextWatcher {
-    override fun afterTextChanged(editable: Editable?) {
-        editable ?: return
-        broadcastChannel.sendBlocking("$editable")
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
     }
-
-    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-}

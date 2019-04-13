@@ -11,4 +11,10 @@ abstract class Store : KoinComponent {
 
     protected val observable: Observable<Action> = dispatcher.observeOn(AndroidSchedulers.mainThread())
 
+    /**
+     * 空のエラー
+     * このクラスのインスタンスが流れてきた時はエラーとして見なさない
+     */
+    inner class EmptyError: Throwable()
+
 }

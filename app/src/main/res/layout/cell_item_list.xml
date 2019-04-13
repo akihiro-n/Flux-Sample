@@ -40,7 +40,8 @@
                     tools:ignore="MissingConstraints"
                     android:layout_marginTop="6dp"
                     android:text="@{item.user.id}"
-                    app:layout_constraintTop_toTopOf="parent" android:textSize="11sp"
+                    android:textColor="@color/textBlack"
+                    app:layout_constraintTop_toTopOf="parent" android:textSize="12sp"
                     tools:text="username001" android:id="@+id/userNameText" android:textStyle="bold"
                     android:fontFamily="monospace"/>
 
@@ -53,9 +54,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="6dp"
                     tools:ignore="MissingConstraints"
-                    android:textSize="12sp"
+                    android:textSize="13sp"
                     app:layout_constraintHorizontal_bias="0.0"
                     android:layout_marginTop="6dp"
+                    android:textColor="@color/textBlack"
                     app:layout_constraintTop_toBottomOf="@+id/userNameText"
                     tools:text="【Kotlin】map, filterの活用に関するベストプラクティス" android:fontFamily="monospace"
                     android:id="@+id/titleText"/>
@@ -63,14 +65,15 @@
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    tools:layout_editor_absoluteY="8dp"
                     android:text="@{item.updatedAt}"
                     android:textSize="6sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="6dp"
                     android:fontFamily="monospace"
                     android:id="@+id/dateText"
-                    tools:ignore="MissingConstraints" tools:text="2001/01/01"/>
+                    android:textColor="@color/textBlack"
+                    tools:ignore="MissingConstraints" tools:text="2001/01/01" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toTopOf="parent"/>
             <TextView
                     android:text="TextView"
                     android:layout_width="wrap_content"
@@ -81,6 +84,7 @@
                     android:textSize="8sp"
                     tools:text="@{item.likesCountText}"
                     android:fontFamily="monospace"
+                    android:textColor="@color/textBlack"
                     tools:ignore="MissingConstraints"
                     android:layout_marginEnd="6dp"
                     app:layout_constraintEnd_toEndOf="parent" android:textStyle="bold"/>

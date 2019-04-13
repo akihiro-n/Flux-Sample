@@ -4,10 +4,11 @@ import android.annotation.SuppressLint
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.util.Log
+import android.view.View
 import com.example.akihiro.fluxsample.application.actioncreator.ItemActionCreator
 import com.example.akihiro.fluxsample.domain.entity.Item
 import com.example.akihiro.fluxsample.domain.store.ItemStore
+import flux.Store
 
 class MainViewModel(
     private val itemActionCreator: ItemActionCreator,
@@ -33,9 +34,18 @@ class MainViewModel(
 
     @SuppressLint("CheckResult")
     private fun initStores() {
-        itemStore
-            .itemsState()
-            .subscribe (itemsMutableLiveData::postValue)
+        itemStore.apply {
+            itemsState
+                .subscribe { item ->
+                    itemsMutableLiveData.postValue(item)
+                }
+
+            errorFetchItemsState
+                .filter { it !is Store.EmptyError }
+                .subscribe {
+
+                }
+        }
     }
 
     private fun initActions() {
@@ -43,7 +53,7 @@ class MainViewModel(
     }
 
     fun fetchNewItems() {
-        itemActionCreator.fetchNewItems(itemStore.nextPageState())
+        itemActionCreator.fetchNewItems(itemStore.nextPageState)
     }
 
 }

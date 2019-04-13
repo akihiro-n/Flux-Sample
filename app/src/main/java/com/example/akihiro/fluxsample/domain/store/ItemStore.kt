@@ -15,9 +15,12 @@ class ItemStore : Store() {
     private val itemsSubject = BehaviorSubject.create<List<Item>>()
     private val fetchItemErrorSubject = BehaviorSubject.create<Throwable>()
 
-    fun nextPageState(): Int = nextPage
-    fun itemsState(): Observable<List<Item>> = itemsSubject
-    fun errorFetchItemsState(): Observable<Throwable> = fetchItemErrorSubject
+    val nextPageState: Int
+        get() = nextPage
+    val itemsState: Observable<List<Item>>
+        get() = itemsSubject
+    val errorFetchItemsState: Observable<Throwable>
+        get() = fetchItemErrorSubject
 
     init {
         initActionObservables()
@@ -30,7 +33,8 @@ class ItemStore : Store() {
             .ofType(ItemAction.Initialize::class.java)
             .subscribe {
                 nextPage = 1
-                itemsSubject.onNext(listOf())
+                itemsSubject.onNext(listOf()) //TODO onNextのタイミングでnullを流せる仕様にしたい
+                fetchItemErrorSubject.onNext(EmptyError()) //TODO onNextのタイミングでnullを流せる仕様にしたい
             }
 
         observable
@@ -40,7 +44,8 @@ class ItemStore : Store() {
             .subscribe { items ->
                 itemsSubject.apply {
                     value.let { value ->
-                        if (value == null) onNext(items) else onNext(value.plus(items))
+                        if (value == null) onNext(items)
+                        else onNext(value.plus(items))
                     }
                 }
             }
@@ -49,7 +54,14 @@ class ItemStore : Store() {
             .updateNextPageState()
             .ofType(ItemAction.FetchItemsForQuery::class.java)
             .map(ItemAction.FetchItemsForQuery::item)
-            .subscribe(itemsSubject::onNext)
+            .subscribe{ items ->
+                itemsSubject.apply {
+                    value.let { value ->
+                        if (value == null) onNext(items)
+                        else onNext(value.plus(items))
+                    }
+                }
+            }
 
         observable
             .ofType(ItemAction.ErrorFetchNewItems::class.java)
